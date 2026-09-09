@@ -5,7 +5,7 @@ class Medico {
 
   Paciente pacienteAtual;
 
-  int inicioAtendimento;
+  long inicioAtendimento;
   float tempoAtendimento;
 
 
@@ -24,7 +24,7 @@ class Medico {
 
     tempoAtendimento = max(12.0 + 4.0 * randomGaussian(), 4.0);
 
-    inicioAtendimento = millis();
+    inicioAtendimento = millisSimulacao();
   }
 
 
@@ -34,7 +34,7 @@ class Medico {
       return false;
     }
 
-    return millis() - inicioAtendimento >= tempoAtendimento * 1000;
+    return millisSimulacao() - inicioAtendimento >= tempoAtendimento * 1000;
   }
 
 

@@ -78,7 +78,14 @@ class AtendimentoMedico {
   Paciente atualizarConsulta(Medico medico) {
 
     if (medico.atendimentoTerminou()) {
-      return medico.finalizarAtendimento();
+
+      Paciente paciente = medico.finalizarAtendimento();
+
+      if (paciente != null && removedor != null) {
+        paciente.destino = removedor.copy();
+      }
+
+      return paciente;
     }
 
     return null;
