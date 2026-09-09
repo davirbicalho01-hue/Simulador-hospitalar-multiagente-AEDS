@@ -105,17 +105,12 @@ void atualizarTriagem() {
 
       Paciente p = pacienteNaTriagem[i];
 
-      String cor = manchester.classificar(p);
-
-      atendimentoMedico.adicionarPaciente(p, cor);
-
       p.estado = EstadoPaciente.INDO_ASSENTO_MEDICO;
 
       pacienteNaTriagem[i] = null;
       enfermeiraOciosa[i] = true;
       triagemIniciada[i] = false;
     }
-
 
     if (enfermeiraOciosa[i]) {
 

@@ -9,8 +9,8 @@ class WaveFront {
     ListaEncadeada<Coordenada> caminho =
       new ListaEncadeada<Coordenada>();
 
-    if (!coordenadaValida(mapa, origem) ||
-        !coordenadaValida(mapa, destino)) {
+    if (!coordenadaValida(mapa, origem, origem, destino) ||
+        !coordenadaValida(mapa, destino, origem, destino)) {
 
       return caminho;
     }
@@ -61,75 +61,48 @@ class WaveFront {
         distancia[atual.linha][atual.coluna] + 1;
 
       Coordenada cima =
-        new Coordenada(
-          atual.linha - 1,
-          atual.coluna
-        );
+        new Coordenada(atual.linha - 1, atual.coluna);
 
-      if (coordenadaValida(mapa, cima) &&
+      if (coordenadaValida(mapa, cima, origem, destino) &&
           distancia[cima.linha][cima.coluna] == -1) {
 
-        distancia[cima.linha][cima.coluna] =
-          novaDistancia;
-
+        distancia[cima.linha][cima.coluna] = novaDistancia;
         frente.add(cima);
       }
 
       Coordenada baixo =
-        new Coordenada(
-          atual.linha + 1,
-          atual.coluna
-        );
+        new Coordenada(atual.linha + 1, atual.coluna);
 
-      if (coordenadaValida(mapa, baixo) &&
+      if (coordenadaValida(mapa, baixo, origem, destino) &&
           distancia[baixo.linha][baixo.coluna] == -1) {
 
-        distancia[baixo.linha][baixo.coluna] =
-          novaDistancia;
-
+        distancia[baixo.linha][baixo.coluna] = novaDistancia;
         frente.add(baixo);
       }
 
       Coordenada esquerda =
-        new Coordenada(
-          atual.linha,
-          atual.coluna - 1
-        );
+        new Coordenada(atual.linha, atual.coluna - 1);
 
-      if (coordenadaValida(mapa, esquerda) &&
+      if (coordenadaValida(mapa, esquerda, origem, destino) &&
           distancia[esquerda.linha][esquerda.coluna] == -1) {
 
-        distancia[esquerda.linha][esquerda.coluna] =
-          novaDistancia;
-
+        distancia[esquerda.linha][esquerda.coluna] = novaDistancia;
         frente.add(esquerda);
       }
 
       Coordenada direita =
-        new Coordenada(
-          atual.linha,
-          atual.coluna + 1
-        );
+        new Coordenada(atual.linha, atual.coluna + 1);
 
-      if (coordenadaValida(mapa, direita) &&
+      if (coordenadaValida(mapa, direita, origem, destino) &&
           distancia[direita.linha][direita.coluna] == -1) {
 
-        distancia[direita.linha][direita.coluna] =
-          novaDistancia;
-
+        distancia[direita.linha][direita.coluna] = novaDistancia;
         frente.add(direita);
       }
     }
 
     if (!encontrouDestino &&
         distancia[destino.linha][destino.coluna] == -1) {
-
-      println(
-        "Não existe caminho entre "
-        + origem.linha + "," + origem.coluna
-        + " e "
-        + destino.linha + "," + destino.coluna
-      );
 
       return caminho;
     }
@@ -144,8 +117,7 @@ class WaveFront {
 
     int indice = tamanhoCaminho - 1;
 
-    caminhoTemporario[indice] =
-      atual.copy();
+    caminhoTemporario[indice] = atual.copy();
 
     indice--;
 
@@ -155,56 +127,40 @@ class WaveFront {
         distancia[atual.linha][atual.coluna];
 
       Coordenada cima =
-        new Coordenada(
-          atual.linha - 1,
-          atual.coluna
-        );
+        new Coordenada(atual.linha - 1, atual.coluna);
 
-      if (coordenadaValida(mapa, cima) &&
-          distancia[cima.linha][cima.coluna]
-          == distanciaAtual - 1) {
+      if (coordenadaValida(mapa, cima, origem, destino) &&
+          distancia[cima.linha][cima.coluna] == distanciaAtual - 1) {
 
         atual = cima;
 
       } else {
 
         Coordenada baixo =
-          new Coordenada(
-            atual.linha + 1,
-            atual.coluna
-          );
+          new Coordenada(atual.linha + 1, atual.coluna);
 
-        if (coordenadaValida(mapa, baixo) &&
-            distancia[baixo.linha][baixo.coluna]
-            == distanciaAtual - 1) {
+        if (coordenadaValida(mapa, baixo, origem, destino) &&
+            distancia[baixo.linha][baixo.coluna] == distanciaAtual - 1) {
 
           atual = baixo;
 
         } else {
 
           Coordenada esquerda =
-            new Coordenada(
-              atual.linha,
-              atual.coluna - 1
-            );
+            new Coordenada(atual.linha, atual.coluna - 1);
 
-          if (coordenadaValida(mapa, esquerda) &&
-              distancia[esquerda.linha][esquerda.coluna]
-              == distanciaAtual - 1) {
+          if (coordenadaValida(mapa, esquerda, origem, destino) &&
+              distancia[esquerda.linha][esquerda.coluna] == distanciaAtual - 1) {
 
             atual = esquerda;
 
           } else {
 
             Coordenada direita =
-              new Coordenada(
-                atual.linha,
-                atual.coluna + 1
-              );
+              new Coordenada(atual.linha, atual.coluna + 1);
 
-            if (coordenadaValida(mapa, direita) &&
-                distancia[direita.linha][direita.coluna]
-                == distanciaAtual - 1) {
+            if (coordenadaValida(mapa, direita, origem, destino) &&
+                distancia[direita.linha][direita.coluna] == distanciaAtual - 1) {
 
               atual = direita;
             }
@@ -212,47 +168,40 @@ class WaveFront {
         }
       }
 
-      caminhoTemporario[indice] =
-        atual.copy();
+      caminhoTemporario[indice] = atual.copy();
 
       indice--;
     }
 
     for (int i = 0; i < tamanhoCaminho; i++) {
-
-      caminho.add(
-        caminhoTemporario[i]
-      );
+      caminho.add(caminhoTemporario[i]);
     }
 
     return caminho;
   }
 
+
   boolean coordenadaValida(
     char[][] mapa,
-    Coordenada coordenada
+    Coordenada coordenada,
+    Coordenada origem,
+    Coordenada destino
   ) {
 
-    if (coordenada.linha < 0) {
+    if (coordenada.linha < 0 ||
+        coordenada.linha >= mapa.length ||
+        coordenada.coluna < 0 ||
+        coordenada.coluna >= mapa[coordenada.linha].length) {
+
       return false;
     }
 
-    if (coordenada.linha >= mapa.length) {
-      return false;
+    if (coordenada.equals(origem) ||
+        coordenada.equals(destino)) {
+
+      return true;
     }
 
-    if (coordenada.coluna < 0) {
-      return false;
-    }
-
-    if (coordenada.coluna >= mapa[coordenada.linha].length) {
-      return false;
-    }
-
-    if (mapa[coordenada.linha][coordenada.coluna] == '#') {
-      return false;
-    }
-
-    return true;
+    return mapa[coordenada.linha][coordenada.coluna] == '.';
   }
 }

@@ -169,7 +169,7 @@ void atualizarMedicos() {
         if (destino != null) {
           pacienteChamadoMedico[i] = proximo;
           proximo.destino = destino.copy();
-          proximo.estado = EstadoPaciente.INDO_ASSENTO_MEDICO;
+          proximo.estado = EstadoPaciente.INDO_MEDICO;
         }
       }
     }
@@ -188,23 +188,47 @@ void movimentarPacientes() {
 }
 
 void processarChegadas() {
+
   for (int i = 0; i < pacientes.count(); i++) {
+
     Paciente p = pacientes.get(i);
 
     if (p.estado == EstadoPaciente.INDO_TOTEM &&
         p.posicao.equals(p.destino)) {
 
-      int[][] distancias = calcularDistanciasAssentos(p);
       p.estado = EstadoPaciente.TOTEM;
+    }
+
+    if (p.estado == EstadoPaciente.TOTEM &&
+        p.posicao.equals(totem)) {
+
+      int[][] distancias =
+        calcularDistanciasAssentos(p);
+
       processarTotem(p, distancias);
+    }
+
+    if (p.estado == EstadoPaciente.INDO_ASSENTO_TRIAGEM &&
+        p.posicao.equals(p.destino)) {
+
+      if (p.ehPreferencial) {
+        filaTriagemPreferencial.enfileirar(p);
+      } else {
+        filaTriagemNormal.enfileirar(p);
+      }
+
+      p.estado = EstadoPaciente.AGUARDANDO_TRIAGEM;
     }
 
     if (p.estado == EstadoPaciente.INDO_TRIAGEM &&
         p.posicao.equals(p.destino)) {
 
       for (int j = 0; j < qtdEnfermeiros; j++) {
+
         if (pacienteNaTriagem[j] == p) {
+
           iniciarAtendimentoTriagem(j, p);
+
           break;
         }
       }
@@ -213,10 +237,27 @@ void processarChegadas() {
     if (p.estado == EstadoPaciente.INDO_ASSENTO_MEDICO &&
         p.posicao.equals(p.destino)) {
 
+      String cor = manchester.classificar(p);
+
+      atendimentoMedico.adicionarPaciente(p, cor);
+
+      p.estado = EstadoPaciente.AGUARDANDO_MEDICO;
+    }
+
+    if (p.estado == EstadoPaciente.INDO_MEDICO &&
+        p.posicao.equals(p.destino)) {
+
       for (int j = 0; j < qtdMedicos; j++) {
+
         if (pacienteChamadoMedico[j] == p) {
-          atendimentoMedico.iniciarConsulta(equipeMedica[j], p);
+
+          atendimentoMedico.iniciarConsulta(
+            equipeMedica[j],
+            p
+          );
+
           pacienteChamadoMedico[j] = null;
+
           break;
         }
       }

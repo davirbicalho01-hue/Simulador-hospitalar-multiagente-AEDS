@@ -75,15 +75,9 @@ void liberarAssento(Paciente p) {
 
 void processarTotem(Paciente p, int[][] distanciasAPartirDoPaciente) {
 
-  if (totemOcupado) return; 
+  if (totemOcupado) return;
 
   totemOcupado = true;
-
-  if (p.ehPreferencial) {
-    filaTriagemPreferencial.enfileirar(p);
-  } else {
-    filaTriagemNormal.enfileirar(p);
-  }
 
   int idxAssento =
     reservarAssentoMaisProximo(distanciasAPartirDoPaciente, p);
@@ -92,7 +86,6 @@ void processarTotem(Paciente p, int[][] distanciasAPartirDoPaciente) {
     p.destino = assentos[idxAssento].copy();
     p.estado = EstadoPaciente.INDO_ASSENTO_TRIAGEM;
   }
-
 
   totemOcupado = false;
 }
